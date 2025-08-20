@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Valuation Calculator - Professional Financial Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background: #fafafa;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            color: #768998;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+
+        .hero .subtitle {
+            font-size: 20px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Calculator Section */
+        .calculator {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        }
+
+        .calculator h2 {
+            color: #768998;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #768998;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(118, 137, 152, 0.1);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23768998' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        .btn-calculate {
+            width: 100%;
+            padding: 16px;
+            background: #0015fa;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-calculate:hover {
+            background: #0010d0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 21, 250, 0.3);
+        }
+
+        .btn-calculate:active {
+            transform: translateY(0);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .results h3 {
+            color: #768998;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        .result-item {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-label {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            color: #333;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .result-item.highlight {
+            background: linear-gradient(135deg, #768998 0%, #8fa3b3 100%);
+            color: white;
+        }
+
+        .result-item.highlight .result-label,
+        .result-item.highlight .result-value {
+            color: white;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero .subtitle {
+                font-size: 18px;
+            }
+
+            .calculator {
+                padding: 30px 20px;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero .subtitle {
+                font-size: 16px;
+            }
+
+            .calculator h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Business Valuation Calculator</h1>
+        <p class="subtitle">
+            Professional financial analysis service that evaluates your company and provides 
+            initial calculations of general financial performance through comprehensive data analysis
+        </p>
+    </section>
+
+    <!-- Calculator Section -->
+    <div class="container">
+        <div class="calculator">
+            <h2>Enter Your Financial Data</h2>
+            <form id="valuationForm">
+                <div class="form-group">
+                    <label for="revenue">Revenue</label>
+                    <input type="number" id="revenue" step="0.01" required placeholder="Enter revenue amount">
+                </div>
+
+                <div class="form-group">
+                    <label for="costRevenue">Cost of Revenue</label>
+                    <input type="number" id="costRevenue" step="0.01" required placeholder="Enter cost of revenue">
+                </div>
+
+                <div class="form-group">
+                    <label for="sga">SG&A (Selling, General and Administrative)</label>
+                    <input type="number" id="sga" step="0.01" required placeholder="Enter SG&A expenses">
+                </div>
+
+                <div class="form-group">
+                    <label for="da">D&A (Depreciation and Amortization)</label>
+                    <input type="number" id="da" step="0.01" required placeholder="Enter D&A amount">
+                </div>
+
+                <div class="form-group">
+                    <label for="otherCosts">Other Operating Costs</label>
+                    <input type="number" id="otherCosts" step="0.01" required placeholder="Enter other operating costs">
+                </div>
+
+                <div class="form-group">
+                    <label for="sector">Sector</label>
+                    <select id="sector" required>
+                        <option value="">Select a sector</option>
+                        <option value="tech">Technology</option>
+                        <option value="pharma">Pharmaceutical</option>
+                        <option value="agriculture">Agriculture</option>
+                        <option value="finance">Finance & Banking</option>
+                        <option value="retail">Retail</option>
+                        <option value="manufacturing">Manufacturing</option>
+                        <option value="energy">Energy</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="realestate">Real Estate</option>
+                        <option value="telecom">Telecommunications</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Geographic Location</label>
+                    <select id="location" required>
+                        <option value="">Select a location</option>
+                        <option value="us">🇺🇸 United States</option>
+                        <option value="uk">🇬🇧 United Kingdom</option>
+                        <option value="de">🇩🇪 Germany</option>
+                        <option value="fr">🇫🇷 France</option>
+                        <option value="it">🇮🇹 Italy</option>
+                        <option value="es">🇪🇸 Spain</option>
+                        <option value="ca">🇨🇦 Canada</option>
+                        <option value="au">🇦🇺 Australia</option>
+                        <option value="jp">🇯🇵 Japan</option>
+                        <option value="cn">🇨🇳 China</option>
+                        <option value="in">🇮🇳 India</option>
+                        <option value="br">🇧🇷 Brazil</option>
+                        <option value="mx">🇲🇽 Mexico</option>
+                        <option value="kr">🇰🇷 South Korea</option>
+                        <option value="sg">🇸🇬 Singapore</option>
+                        <option value="hk">🇭🇰 Hong Kong</option>
+                        <option value="ch">🇨🇭 Switzerland</option>
+                        <option value="nl">🇳🇱 Netherlands</option>
+                        <option value="se">🇸🇪 Sweden</option>
+                        <option value="no">🇳🇴 Norway</option>
+                        <option value="dk">🇩🇰 Denmark</option>
+                        <option value="fi">🇫🇮 Finland</option>
+                        <option value="be">🇧🇪 Belgium</option>
+                        <option value="at">🇦🇹 Austria</option>
+                        <option value="pt">🇵🇹 Portugal</option>
+                        <option value="gr">🇬🇷 Greece</option>
+                        <option value="pl">🇵🇱 Poland</option>
+                        <option value="ru">🇷🇺 Russia</option>
+                        <option value="tr">🇹🇷 Turkey</option>
+                        <option value="sa">🇸🇦 Saudi Arabia</option>
+                        <option value="ae">🇦🇪 United Arab Emirates</option>
+                        <option value="il">🇮🇱 Israel</option>
+                        <option value="eg">🇪🇬 Egypt</option>
+                        <option value="za">🇿🇦 South Africa</option>
+                        <option value="ng">🇳🇬 Nigeria</option>
+                        <option value="ar">🇦🇷 Argentina</option>
+                        <option value="cl">🇨🇱 Chile</option>
+                        <option value="co">🇨🇴 Colombia</option>
+                        <option value="pe">🇵🇪 Peru</option>
+                        <option value="nz">🇳🇿 New Zealand</option>
+                        <option value="id">🇮🇩 Indonesia</option>
+                        <option value="my">🇲🇾 Malaysia</option>
+                        <option value="th">🇹🇭 Thailand</option>
+                        <option value="vn">🇻🇳 Vietnam</option>
+                        <option value="ph">🇵🇭 Philippines</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-calculate">Calculate Valuation</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Results -->
+    <div id="resultsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <div class="results">
+                <h3>Valuation Results</h3>
+                <div class="result-item">
+                    <span class="result-label">EBIT</span>
+                    <span class="result-value" id="ebitResult">$0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">EBITDA</span>
+                    <span class="result-value" id="ebitdaResult">$0</span>
+                </div>
+                <div class="result-item highlight">
+                    <span class="result-label">Company Valuation</span>
+                    <span class="result-value" id="valuationResult">$0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sector multiples
+        const sectorMultiples = {
+            tech: 15,
+            pharma: 12,
+            agriculture: 6,
+            finance: 10,
+            retail: 8,
+            manufacturing: 7,
+            energy: 9,
+            healthcare: 11,
+            realestate: 14,
+            telecom: 8
+        };
+
+        // Form submission handler
+        document.getElementById('valuationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateValuation();
+        });
+
+        function calculateValuation() {
+            // Get input values
+            const revenue = parseFloat(document.getElementById('revenue').value) || 0;
+            const costRevenue = parseFloat(document.getElementById('costRevenue').value) || 0;
+            const sga = parseFloat(document.getElementById('sga').value) || 0;
+            const da = parseFloat(document.getElementById('da').value) || 0;
+            const otherCosts = parseFloat(document.getElementById('otherCosts').value) || 0;
+            const sector = document.getElementById('sector').value;
+
+            // Validate sector selection
+            if (!sector) {
+                alert('Please select a sector');
+                return;
+            }
+
+            // Calculate EBIT
+            const ebit = revenue - costRevenue - sga - da - otherCosts;
+
+            // Calculate EBITDA
+            const ebitda = ebit + da;
+
+            // Get sector multiple
+            const multiple = sectorMultiples[sector];
+
+            // Calculate company valuation
+            const valuation = ebitda * multiple;
+
+            // Display results
+            displayResults(ebit, ebitda, valuation);
+        }
+
+        function displayResults(ebit, ebitda, valuation) {
+            // Format numbers
+            const formatNumber = (num) => {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(num);
+            };
+
+            // Update result values
+            document.getElementById('ebitResult').textContent = formatNumber(ebit);
+            document.getElementById('ebitdaResult').textContent = formatNumber(ebitda);
+            document.getElementById('valuationResult').textContent = formatNumber(valuation);
+
+            // Show modal
+            document.getElementById('resultsModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('resultsModal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('resultsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
